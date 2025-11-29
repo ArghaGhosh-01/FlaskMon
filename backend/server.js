@@ -3,6 +3,7 @@ const fs = require("fs");
 const cors = require("cors");
 const connectDB = require("./models/db");
 const User = require("./models/User");
+const Todo = require("./models/todo");
 
 const app = express();
 const PORT = 3000;
@@ -42,6 +43,21 @@ app.get("/getdata", async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+
+app.post("/submittodoitem", async (req, res) => {
+  try {
+    const { itemName, itemDescription } = req.body;
+
+    const todo = new Todo({ itemName, itemDescription });
+    await todo.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 
 app.listen(PORT, () => console.log(`Server running on : http://localhost:${PORT}/`));
